@@ -2,9 +2,10 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.82
+// @version      0.83
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
+// @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
 // @match        http*://*.messenger.com/*
 // @match        http*://*.slack.com/messages/*
 // @match        http*://mail.google.com/mail/*
