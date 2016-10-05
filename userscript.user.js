@@ -2,14 +2,13 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.84
+// @version      0.8.4
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
-// @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
-// @match        *://*.messenger.com/*
-// @match        *://*.slack.com/messages/*
-// @match        *://mail.google.com/mail/*
-// @match        *://hangouts.google.com/webchat/*
+// @match        http*://*.messenger.com/*
+// @match        http*://*.slack.com/messages/*
+// @match        http*://mail.google.com/mail/*
+// @match        http*://hangouts.google.com/webchat/*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
@@ -108,11 +107,11 @@ body:not(.loading) #team_menu:hover, body:not(.loading) #team_menu.active, #quic
   background: #ddd;
 } /* highlighted things, hovering over them */
 
-#msgs_div img, /* most images */
+#msgs_div img, #msgs_div figure, /* most images */
 #msgs_div .member_image /* avatars in message panel */
 {opacity: {{imageOpacity}};}
 
-#msgs_div img:hover,
+#msgs_div img:hover, #msgs_div figure:hover,
 #msgs_div .member_image:hover
 {opacity: {{imageOpacityHover}};}
 `;
