@@ -2,9 +2,10 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.8.4
+// @version      0.8.5
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
+// @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
 // @match        http*://*.messenger.com/*
 // @match        http*://*.slack.com/messages/*
 // @match        http*://mail.google.com/mail/*
@@ -94,6 +95,9 @@ css.slack.css = `
   background: #f9f9f9;
 } /* sidebar background */
 
+#team_header_user_name /* username in sidebar */
+{color: black !important;}
+
 #col_channels h2 {
   color: black !important;
 } /* section headers in sidebar */
@@ -106,6 +110,12 @@ body:not(.sorting_mode) .channels_list_holder ul li a:hover, #monkey_scroll_wrap
 body:not(.loading) #team_menu:hover, body:not(.loading) #team_menu.active, #quick_switcher_btn:hover, #quick_switcher_btn:active {
   background: #ddd;
 } /* highlighted things, hovering over them */
+
+#channel_scroll_up /* the MORE UNREADS thing that shows up in the chat list when there's unread messages */
+{top: 10px;}
+
+.ts_tip .ts_tip_multiline_inner, .ts_tip:not(.ts_tip_multiline) .ts_tip_tip /* tooltip, like when mousing over a message reaction */
+{background: rgba(0,0,0,.65); border: 1px solid gray; color: white !important;}
 
 #msgs_div img, #msgs_div figure, /* most images */
 #msgs_div .member_image /* avatars in message panel */
