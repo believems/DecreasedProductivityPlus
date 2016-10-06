@@ -2,10 +2,11 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.8.5
+// @version      0.9.0
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
+// @match        *://*/*
 // @match        http*://*.messenger.com/*
 // @match        http*://*.slack.com/messages/*
 // @match        http*://mail.google.com/mail/*
@@ -45,8 +46,15 @@ html, body, div, p, span, a {
    font-size: 13px !important;
    font-weight: 400 !important;
    color: #222 !important;
-   background-color: transparent;
+   background-color: transparent !important;
 }
+
+img, figure, video
+{opacity: {{imageOpacity}};}
+
+img:hover, figure:hover, video:hover
+{opacity: {{imageOpacityHover}};}
+
 `;
 css.messenger = {};
 css.messenger.css = `
@@ -138,21 +146,21 @@ css.gmail.css = `
 .ZY /* Header that shows up if you're forwarding any email to a new email address */
 {background-color: rgba(255,221,221,.2);}
 `;
-css.gmailhangouts = {}
+css.gmailhangouts = {};
 css.gmailhangouts.css = `
 .TsiDff /* Whole chat box */
 {opacity: .2; transition: opacity .1s ease-in-out;}
 .TsiDff:hover /* Hover over chat box */
 {opacity: 1;}
 .Ik /* Chat header */
-{background: rgba(0,0,0,.5);}
+{background: rgba(0,0,0,.5) !important;}
 .uB /* Chat header, new message */
-{background: rgba(83, 169, 63,.6); border-bottom-color: rgba(83, 169, 63,.6);}
+{background: rgba(83, 169, 63,.6) !important; border-bottom-color: rgba(83, 169, 63,.6);}
 .GN * /* Chat header text */
 {color: white !important;}
 div.EV, /* Chat top button bar */
 .iN /* Chat background */
-{background: rgba(255, 255, 255, .9);}
+{background: rgba(255, 255, 255, .9) !important;}
 .Ia .Bb /* Chat list contact */
 {transition: background .1s ease-in-out;}
 .Ia .Bb:hover, .Ia .Bb:focus /* Chat list contact, hovering */
@@ -160,6 +168,8 @@ div.EV, /* Chat top button bar */
 .Ia .Bb>.R8jgRe>.ng /* Chat list, contact text */
 {text-shadow: none;}
 `;
+css.none = {};
+css.none.css = ``;
 
 
 function addGlobalStyle(css, id, enabled) {
@@ -190,10 +200,10 @@ document.addEventListener("keydown", function(e) {
 
         if (cssEl.disabled === false) {
             cssEl.disabled = true;
-            GM_setValue( 'enabled_'+currentSite , false );
+            if (currentSite != 'none') {GM_setValue( 'enabled_'+currentSite , false );}
         } else {
             cssEl.disabled = false;
-            GM_setValue( 'enabled_'+currentSite , true );
+            if (currentSite != 'none') {GM_setValue( 'enabled_'+currentSite , true );}
         }
     }
 });
@@ -201,16 +211,19 @@ document.addEventListener("keydown", function(e) {
 function getSetCurrentSite() {
     var url = document.documentURI;
 
-    if (url.indexOf('messenger.com') != -1) currentSite = 'messenger';
-    if (url.indexOf('slack.com') != -1) currentSite = 'slack';
-    if (url.indexOf('mail.google.com') != -1) currentSite = 'gmail';
-    if (url.indexOf('hangouts.google.com/webchat') != -1) currentSite = 'gmailhangouts';
+    if (url.indexOf('messenger.com') != -1) return currentSite = 'messenger';
+    if (url.indexOf('slack.com') != -1) return currentSite = 'slack';
+    if (url.indexOf('mail.google.com') != -1) return currentSite = 'gmail';
+    if (url.indexOf('hangouts.google.com/webchat') != -1) return currentSite = 'gmailhangouts';
+
+    return currentSite = 'none';
 }
 
 function init() {
     getSetCurrentSite();
 
     var styleEnabled = GM_getValue( 'enabled_'+currentSite , true );
+    if (currentSite == 'none') styleEnabled = false; // don't automatically enable if the site isn't specifically tailored for the script
 
     addGlobalStyle(parseCSS(
         css.common.css + css[currentSite].css
