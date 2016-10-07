@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.1
+// @version      0.9.2
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -250,10 +250,18 @@ function init() {
             e = e ? e : window.event;
             var from = e.relatedTarget || e.toElement;
 
-            if (!from || from.nodeName == "HTML") {
+            if (from == null) {
                 // the cursor has left the building
                 hideHtml();
             } else {
+                showHtml();
+            }
+        });
+	    addEvent(window, "mouseover", function(e) {
+            e = e ? e : window.event;
+            var from = e.relatedTarget || e.toElement;
+
+            if (from != null) {
                 showHtml();
             }
         });
