@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.4
+// @version      0.9.5
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -46,7 +46,7 @@ html, body, div, p, span, a, table, td {
    font-size: 13px !important;
    font-weight: 400 !important;
    color: #222 !important;
-   background-color: transparent !important;
+   background-color: rgba(255, 255, 255, .3) !important;
 }
 
 img, figure, video
@@ -197,26 +197,26 @@ document.addEventListener("keydown", function(e) {
     if (e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false && e.code == 'KeyI') {
         // toggle style
         var cssEl = document.getElementById('dpplus-css');
-	    var gradientString = 'linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%), ';
-		var bgEls = document.querySelectorAll('[style*="url("]');
+        var gradientString = 'linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%), ';
+        var bgEls = document.querySelectorAll('[style*="url("]');
 
         if (cssEl.disabled === false) {
             cssEl.disabled = true;
 
-		    // disable all background image manipulations
-			for (var i = 0; i < bgEls.length; i++) {
-			  bgEls[i].style.backgroundImage = bgEls[i].attributes.origBackgroundImage;
-			}
+            // disable all background image manipulations
+            for (var i = 0; i < bgEls.length; i++) {
+              bgEls[i].style.backgroundImage = bgEls[i].attributes.origBackgroundImage;
+            }
 
             if (currentSite != 'none') {GM_setValue( 'enabled_'+currentSite , false );}
         } else {
             cssEl.disabled = false;
 
-		    // enable all background image manipulations
-			for (var i = 0; i < bgEls.length; i++) {
-			  bgEls[i].attributes.origBackgroundImage = bgEls[i].style.backgroundImage;
-			  bgEls[i].style.backgroundImage = gradientString + bgEls[i].style.backgroundImage;
-			}
+            // enable all background image manipulations
+            for (var i = 0; i < bgEls.length; i++) {
+              bgEls[i].attributes.origBackgroundImage = bgEls[i].style.backgroundImage;
+              bgEls[i].style.backgroundImage = gradientString + bgEls[i].style.backgroundImage;
+            }
 
             if (currentSite != 'none') {GM_setValue( 'enabled_'+currentSite , true );}
         }
@@ -257,7 +257,7 @@ function init() {
                 showHtml();
             }
         });
-	    addEvent(window, "mouseover", function(e) {
+        addEvent(window, "mouseover", function(e) {
             e = e ? e : window.event;
             var from = e.relatedTarget || e.toElement;
 
