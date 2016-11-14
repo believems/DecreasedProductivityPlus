@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.5
+// @version      0.9.6
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -123,7 +123,7 @@ body:not(.loading) #team_menu:hover, body:not(.loading) #team_menu.active, #quic
 {top: 10px;}
 
 .ts_tip .ts_tip_multiline_inner, .ts_tip:not(.ts_tip_multiline) .ts_tip_tip /* tooltip, like when mousing over a message reaction */
-{background: rgba(0,0,0,.65); border: 1px solid gray; color: white !important;}
+{background: rgba(0,0,0,.65) !important; border: 1px solid gray; color: white !important;}
 
 #msgs_div img, #msgs_div figure, /* most images */
 #msgs_div .member_image /* avatars in message panel */
