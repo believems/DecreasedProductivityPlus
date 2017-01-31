@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.6
+// @version      0.9.7
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -44,7 +44,7 @@ html.unfocused {
 html, body, div, p, span, a, table, td {
    font-family: Arial, sans-serif !important;
    font-size: 13px !important;
-   font-weight: 400 !important;
+   /* font-weight: 400 !important; */
    color: #222 !important;
    background-color: rgba(255, 255, 255, .3) !important;
 }
