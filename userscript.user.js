@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.7
+// @version      0.9.8
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -44,7 +44,7 @@ html.unfocused {
 html, body, div, p, span, a, table, td {
    font-family: Arial, sans-serif !important;
    font-size: 13px !important;
-   /* font-weight: 400 !important; */
+   font-weight: 400 !important;
    color: #222 !important;
    background-color: rgba(255, 255, 255, .3) !important;
 }
@@ -100,8 +100,12 @@ css.messenger.css = `
 css.slack = {};
 css.slack.css = `
 #col_channels_bg, #col_channels, #team_menu, #quick_switcher_btn, #team_menu_overlay, #col_channels_overlay {
-  background: #f9f9f9;
+  background: #f9f9f9 !important;
 } /* sidebar background */
+
+#quick_switcher_btn #quick_switcher_label, #quick_switcher_btn .ts_icon, #quick_switcher_btn #quick_switcher_shortcut, body #team_menu_user_name {
+  color: #222 !important;
+}
 
 #team_header_user_name /* username in sidebar */
 {color: black !important;}
@@ -168,6 +172,11 @@ div.EV, /* Chat top button bar */
 .Ia .Bb>.R8jgRe>.ng /* Chat list, contact text */
 {text-shadow: none;}
 `;
+css.inbox = {};
+css.inbox.css = `
+.ss, .qG, .qG * /* Bolded Messages */
+{ font-weight: bold !important; }
+`;
 css.none = {};
 css.none.css = ``;
 
@@ -230,6 +239,7 @@ function getSetCurrentSite() {
     if (url.indexOf('slack.com') != -1) return currentSite = 'slack';
     if (url.indexOf('mail.google.com') != -1) return currentSite = 'gmail';
     if (url.indexOf('hangouts.google.com/webchat') != -1) return currentSite = 'gmailhangouts';
+    if (url.indexOf('inbox.google.com') != -1) return currentSite = 'inbox';
 
     return currentSite = 'none';
 }
