@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.8
+// @version      0.9.9
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -58,6 +58,9 @@ img:hover, figure:hover, video:hover
 `;
 css.messenger = {};
 css.messenger.css = `
+._1z8r, ._1z8r * {font-size: 30px !important;}  /* Reaction images in the react popup */
+
+
 ._55lt img, /* Left hand avatars */
 ._4ld- div[style]:not([class]), /* Left hand avatars (group icons) */
 ._3xn1, /* Link Thumbnails */
