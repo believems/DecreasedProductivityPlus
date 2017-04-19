@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.9
+// @version      0.9.10
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -110,7 +110,11 @@ css.slack.css = `
   color: #222 !important;
 }
 
-#team_header_user_name /* username in sidebar */
+#team_header_user_name, /* username in sidebar */
+body .channels_list_holder ul li .primary_action.feature_user_custom_status > *:not(.unread_highlights) /* Items in sidebar */
+{color: black !important;}
+
+#channels_scroller.show_which_channel_is_active ul li.active .primary_action.feature_user_custom_status > *:not(.unread_highlights) /* Selected item in sidebar */
 {color: black !important;}
 
 #col_channels h2 {
