@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.12
+// @version      0.9.13
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -14,6 +14,26 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // ==/UserScript==
+
+// From https://gist.github.com/arantius/3123124
+// These are replacement functions for GreaseMonkey scripts, but the only work on a single domain instead of being cross domain
+// Todo: Implement solution that works cross domain
+
+if (typeof GM_getValue == 'undefined') {
+  function GM_getValue(aKey, aDefault) {
+    'use strict';
+    let val = localStorage.getItem(scriptId + aKey)
+    if (null === val && 'undefined' != typeof aDefault) return aDefault;
+    return val;
+  }
+}
+
+if (typeof GM_setValue == 'undefined') {
+  function GM_setValue(aKey, aVal) {
+    'use strict';
+    localStorage.setItem(scriptId + aKey, aVal);
+  }
+}
 
 var currentSite = '';
 
