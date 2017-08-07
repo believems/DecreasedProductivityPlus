@@ -2,7 +2,7 @@
 // @name         Decreased Productivity Plus
 // @icon         http://i.imgur.com/ffgP58A.png
 // @namespace    skoshy.com
-// @version      0.9.13
+// @version      0.9.14
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
 // @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
@@ -15,6 +15,10 @@
 // @grant        GM_setValue
 // ==/UserScript==
 
+var DEBUG_MODE = false;
+var SCRIPT_ID = 'dpplus';
+var CURRENT_SITE = getCurrentSite();
+
 // From https://gist.github.com/arantius/3123124
 // These are replacement functions for GreaseMonkey scripts, but the only work on a single domain instead of being cross domain
 // Todo: Implement solution that works cross domain
@@ -22,7 +26,7 @@
 if (typeof GM_getValue == 'undefined') {
   function GM_getValue(aKey, aDefault) {
     'use strict';
-    let val = localStorage.getItem(scriptId + aKey)
+    let val = localStorage.getItem(SCRIPT_ID + aKey);
     if (null === val && 'undefined' != typeof aDefault) return aDefault;
     return val;
   }
@@ -31,11 +35,9 @@ if (typeof GM_getValue == 'undefined') {
 if (typeof GM_setValue == 'undefined') {
   function GM_setValue(aKey, aVal) {
     'use strict';
-    localStorage.setItem(scriptId + aKey, aVal);
+    localStorage.setItem(SCRIPT_ID + aKey, aVal);
   }
 }
-
-var currentSite = '';
 
 var css = {};
 css.defaults = {};
@@ -212,7 +214,7 @@ css.none = {};
 css.none.css = ``;
 
 
-function addGlobalStyle(css, id, enabled) {
+function addGlobalStyle(css, className, enabled, id) {
     var head, style;
     head = document.getElementsByTagName('head')[0];
     if (!head) { return; }
@@ -220,8 +222,57 @@ function addGlobalStyle(css, id, enabled) {
     style.type = 'text/css';
     style.innerHTML = css;
     style.id = id;
+    style.className = className;
     head.appendChild(style);
     style.disabled = !enabled;
+}
+
+function getCssStyleElements() {
+    return document.getElementsByClassName(SCRIPT_ID+'-css');
+}
+
+function getBgElements() {
+    return document.querySelectorAll('[style*="url("]');
+}
+
+function getGradientString() {
+    return 'linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%), ';
+}
+
+function enableStyle() {
+    var cssToInclude = '';
+    var bgEls = getBgElements();
+    var gradientString = getGradientString();
+
+    addGlobalStyle(parseCSS(
+        css.common.css + css[CURRENT_SITE].css
+    ), SCRIPT_ID+'-css', true, SCRIPT_ID+'-css');
+
+    // enable all background image manipulations
+    for (var i = 0; i < bgEls.length; i++) {
+      bgEls[i].attributes.origBackgroundImage = bgEls[i].style.backgroundImage;
+      bgEls[i].style.backgroundImage = gradientString + bgEls[i].style.backgroundImage;
+    }
+}
+
+function disableStyle() {
+    var cssEls = getCssStyleElements();
+    var bgEls = getBgElements();
+
+    for (let i = 0; i < cssEls.length; i++) {
+        cssEls[i].parentNode.removeChild(cssEls[i]); // remove the element
+    }
+
+    // disable all background image manipulations
+    for (var i = 0; i < bgEls.length; i++) {
+      bgEls[i].style.backgroundImage = bgEls[i].attributes.origBackgroundImage;
+    }
+}
+
+function isStyleEnabled() {
+    var cssEl = document.getElementById(SCRIPT_ID+'-css');
+
+    return isTruthy(cssEl);
 }
 
 function parseCSS(parsed) {
@@ -235,58 +286,41 @@ function parseCSS(parsed) {
 
 document.addEventListener("keydown", function(e) {
     if (e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false && e.code == 'KeyI') {
-        // toggle style
-        var cssEl = document.getElementById('dpplus-css');
-        var gradientString = 'linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.7) 100%), ';
-        var bgEls = document.querySelectorAll('[style*="url("]');
+        if (isStyleEnabled()) {
+            disableStyle();
 
-        if (cssEl.disabled === false) {
-            cssEl.disabled = true;
-
-            // disable all background image manipulations
-            for (var i = 0; i < bgEls.length; i++) {
-              bgEls[i].style.backgroundImage = bgEls[i].attributes.origBackgroundImage;
-            }
-
-            if (currentSite != 'none') {GM_setValue( 'enabled_'+currentSite , false );}
+            if (CURRENT_SITE != 'none') {GM_setValue( 'enabled_'+CURRENT_SITE , false );}
         } else {
-            cssEl.disabled = false;
+            enableStyle();
 
-            // enable all background image manipulations
-            for (var i = 0; i < bgEls.length; i++) {
-              bgEls[i].attributes.origBackgroundImage = bgEls[i].style.backgroundImage;
-              bgEls[i].style.backgroundImage = gradientString + bgEls[i].style.backgroundImage;
-            }
-
-            if (currentSite != 'none') {GM_setValue( 'enabled_'+currentSite , true );}
+            if (CURRENT_SITE != 'none') {GM_setValue( 'enabled_'+CURRENT_SITE , true );}
         }
     }
 });
 
-function getSetCurrentSite() {
+function getCurrentSite() {
     var url = document.documentURI;
+    var toReturn = 'none';
 
-    if (url.indexOf('messenger.com') != -1) return currentSite = 'messenger';
-    if (url.indexOf('slack.com') != -1) return currentSite = 'slack';
-    if (url.indexOf('mail.google.com') != -1) return currentSite = 'gmail';
-    if (url.indexOf('hangouts.google.com/webchat') != -1) return currentSite = 'gmailhangouts';
-    if (url.indexOf('inbox.google.com') != -1) return currentSite = 'inbox';
+    if (url.indexOf('messenger.com') != -1) toReturn = 'messenger';
+    if (url.indexOf('slack.com') != -1) toReturn = 'slack';
+    if (url.indexOf('mail.google.com') != -1) toReturn = 'gmail';
+    if (url.indexOf('hangouts.google.com/webchat') != -1) toReturn = 'gmailhangouts';
+    if (url.indexOf('inbox.google.com') != -1) toReturn = 'inbox';
 
-    return currentSite = 'none';
+    return toReturn;
 }
 
 function init() {
-    getSetCurrentSite();
+    var styleEnabled = GM_getValue( 'enabled_'+CURRENT_SITE , true );
+    if (CURRENT_SITE == 'none') styleEnabled = false; // don't automatically enable if the site isn't specifically tailored for the script
 
-    var styleEnabled = GM_getValue( 'enabled_'+currentSite , true );
-    if (currentSite == 'none') styleEnabled = false; // don't automatically enable if the site isn't specifically tailored for the script
-
-    addGlobalStyle(parseCSS(
-        css.common.css + css[currentSite].css
-    ), 'dpplus-css', styleEnabled);
+    if (styleEnabled) {
+        enableStyle();
+    }
 
     // unfocus / focus transparency effect
-    if (css.overrides.disableUnfocusedTransparency.indexOf(currentSite) == -1) {
+    if (css.overrides.disableUnfocusedTransparency.indexOf(CURRENT_SITE) == -1) {
         addEvent(window, "mouseout", function(e) {
             e = e ? e : window.event;
             var from = e.relatedTarget || e.toElement;
@@ -324,6 +358,23 @@ init();
 * Utility functions
 */
 
+function isTruthy(item) {
+    return !isFalsy(item);
+}
+
+// from https://gist.github.com/skoshy/69a7951b3070c2e2496d8257e16d7981
+function isFalsy(item) {
+    if (
+        !item
+        || (typeof item == "object" && (
+            Object.keys(item).length == 0 // for empty objects, like {}, []
+            && !(typeof item.addEventListener == "function") // omit webpage elements
+        ))
+    )
+        return true;
+    else
+        return false;
+}
 
 function addEvent(obj, evt, fn) {
     if (obj.addEventListener) {
