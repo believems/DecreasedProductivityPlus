@@ -284,7 +284,7 @@ function parseCSS(parsed) {
 }
 
 document.addEventListener("keydown", function(e) {
-	if ((e.altKey === true||e.keyCode=18 ) && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false && e.code == 'KeyI') {
+	if ((e.altKey === true||e.keyCode==18 ) && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false && e.code == 'KeyI') {
 		if (isStyleEnabled()) {
 			disableStyle();
 
