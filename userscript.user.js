@@ -5,7 +5,7 @@
 // @version      0.9.15
 // @description  Makes webpages more discreet
 // @author       Stefan Koshy
-// @updateURL    https://github.com/skoshy/DecreasedProductivityPlus/raw/master/userscript.user.js
+// @updateURL    https://github.com/believems/DecreasedProductivityPlus/raw/master/userscript.user.js
 // @match        *://*/*
 // @match        http*://*.messenger.com/*
 // @match        http*://*.slack.com/messages/*
@@ -284,7 +284,7 @@ function parseCSS(parsed) {
 }
 
 document.addEventListener("keydown", function(e) {
-	if (e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false && e.code == 'KeyI') {
+	if ((e.altKey === true||e.keyCode=18 ) && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false && e.code == 'KeyI') {
 		if (isStyleEnabled()) {
 			disableStyle();
 
